@@ -61,7 +61,7 @@
           jdk21
 
           # Rust
-          (rust-bin.fromRustupToolchainFile ./rust-toolchain)
+          (rust-bin.fromRustupToolchainFile ./rust-toolchain.toml)
 
           # Tauri
           pkg-config
