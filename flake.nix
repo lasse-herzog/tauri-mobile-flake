@@ -91,6 +91,10 @@
         NDK_HOME = "${androidHome}/ndk-bundle";
         GRADLE_OPTS = "-Dorg.gradle.project.android.aapt2FromMavenOverride=${androidHome}/build-tools/${buildToolsVersion}/aapt2";
 
+        # This fixes https://github.com/tauri-apps/tauri/issues/10702
+        __GL_THREADED_OPTIMIZATIONS = 0;
+        __NV_DISABLE_EXPLICIT_SYNC = 1;
+
         shellHook = ''
           avdmanager create avd -n tauri_avd -k "system-images;android-34;default;x86_64" --device "pixel_9"
         '';
