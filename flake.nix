@@ -91,6 +91,8 @@
         NDK_HOME = "${androidHome}/ndk-bundle";
         GRADLE_OPTS = "-Dorg.gradle.project.android.aapt2FromMavenOverride=${androidHome}/build-tools/${buildToolsVersion}/aapt2";
 
+        XDG_DATA_DIRS = "$XDG_DATA_DIRS:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}";
+
         # This fixes https://github.com/tauri-apps/tauri/issues/10702
         __GL_THREADED_OPTIMIZATIONS = 0;
         __NV_DISABLE_EXPLICIT_SYNC = 1;
