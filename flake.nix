@@ -14,8 +14,8 @@
     ...
   }:
     utils.lib.eachDefaultSystem (system: let
-      androidPlatformVersion = "34";
-      buildToolsVersion = "34.0.0";
+      androidPlatformVersion = "35";
+      buildToolsVersion = "35.0.0";
 
       overlays = [(import rust-overlay)];
 
@@ -26,19 +26,30 @@
         config.allowUnfreePredicate = pkg:
           builtins.elem (nixpkgs.lib.getName pkg) [
             "android-studio-stable"
+
             "android-sdk-build-tools"
             "android-sdk-cmdline-tools"
-            "android-sdk-platform-tools"
             "android-sdk-emulator"
             "android-sdk-ndk"
             "android-sdk-platforms"
-            "android-sdk-tools"
+            "android-sdk-platform-tools"
             "android-sdk-system-image-${androidPlatformVersion}-default-x86_64"
+            "android-sdk-tools"
+
+            "build-tools"
+            "cmake"
+            "cmdline-tools"
+            "emulator"
+            "ndk"
+            "platforms"
+            "platform-tools"
+            "system-image-${androidPlatformVersion}-default-x86_64"
+            "tools"
           ];
       };
 
       androidComposition = pkgs.androidenv.composeAndroidPackages {
-        platformVersions = [androidPlatformVersion];
+        platformVersions = [androidPlatformVersion "36"];
         buildToolsVersions = [buildToolsVersion];
         includeNDK = true;
         includeEmulator = true;
@@ -88,7 +99,8 @@
 
         # Environment variables
         ANDROID_HOME = androidHome;
-        NDK_HOME = "${androidHome}/ndk-bundle";
+        ANDROID_SDK_ROOT = androidHome;
+
         GRADLE_OPTS = "-Dorg.gradle.project.android.aapt2FromMavenOverride=${androidHome}/build-tools/${buildToolsVersion}/aapt2";
 
         XDG_DATA_DIRS = "$XDG_DATA_DIRS:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}";
@@ -98,7 +110,9 @@
         __NV_DISABLE_EXPLICIT_SYNC = 1;
 
         shellHook = ''
-          avdmanager create avd -n tauri_avd -k "system-images;android-34;default;x86_64" --device "pixel_9"
+          export NDK_HOME="$ANDROID_HOME/ndk/$(ls -1 $ANDROID_HOME/ndk)"
+
+          avdmanager create avd -n tauri_avd -k "system-images;android-${androidPlatformVersion};default;x86_64" --device "pixel_9"
         '';
       };
     });
